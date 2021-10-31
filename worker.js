@@ -223,7 +223,7 @@ class VoxelWorld {
         }
         return null;
     }
-    
+
 }
 
 
@@ -312,7 +312,7 @@ VoxelWorld.faces = [
 
 
 
-const cellSize = 32;
+const cellSize = 64;
 const tileSize = 16;
 const tileTextureWidth = 256;
 const tileTextureHeight = 64;
@@ -359,10 +359,13 @@ window.onload = () => {
     const far = 1000;
 
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    camera.position.set(-cellSize * .3, cellSize * .8, -cellSize * .3);
-
+    
+    // Camera Position
+    camera.position.set(cellSize*0.45, 4.8 , cellSize*0.45);
+    
     controls = new OrbitControls(camera, canvas);
-    controls.target.set(cellSize / 2, cellSize / 3, cellSize / 2);
+    // Camera LookAt
+    controls.target.set(cellSize*0.5, 0, cellSize*0.5);
     controls.update();
 
     scene = new THREE.Scene();
@@ -421,13 +424,17 @@ window.onload = () => {
     
 
     // Light
-    addLight(scene, -1,  2,  4);
-    addLight(scene, 1, -1, -2);
+    
+    addLight(0, 10,  -30, 0.9);
+    addLight(-30, 10,  0, 0.8);
+
+    addLight(30, 10, 0, 0.7);
+    addLight(0, 10,  30, 0.6);
     
 
     for(let i = 0; i < cellSize; i++)
         for(let j = 0; j < cellSize; j++)
-            world.setVoxel(i, 0, j, randInt(1, 17));
+            world.setVoxel(i, 0, j, 3);
 
 
 
@@ -610,9 +617,8 @@ function randInt(min, max) {
 
 
 
-function addLight(scene, x, y, z) {
+function addLight(x, y, z, intensity) {
     const color = 0xFFFFFF;
-    const intensity = 1.9;
     const light = new THREE.DirectionalLight(color, intensity);
     light.position.set(x, y, z);
     scene.add(light);
