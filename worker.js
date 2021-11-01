@@ -274,9 +274,10 @@ let material
 
 
 
+let selectedColor = 1;
+let selectedShape = 1;
+let currentVoxel = 1;
 
-let currentVoxel = 0;
-let currentId;
 
 let canvas
 let renderer
@@ -321,12 +322,38 @@ window.onload = () => {
 
 
 
+    changeBlock()
 
-    // Load doc elements
-    document.querySelectorAll('#ui .tiles input[type=radio][name=voxel]').forEach((elem) => {
-        elem.addEventListener('click', allowUncheck);
-    });
 
+
+
+    // =============================================================================
+    // =============================================================================
+    // =============================================================================
+
+    let shapeSelect = document.getElementById("shapeSelect")
+    shapeSelect.addEventListener("change", (event) => {
+        selectedShape = shapeSelect.options[shapeSelect.options.selectedIndex].value
+        changeBlock()
+    })
+
+    let colorSelect = document.getElementById("colorSelect")
+    colorSelect.addEventListener("change", (event) => {
+        selectedColor = colorSelect.options[colorSelect.options.selectedIndex].value
+        changeBlock()
+    })
+
+
+    document.getElementById("blockCreate").addEventListener("click", () => {
+        changeBlock()
+    })
+
+    document.getElementById("blockDelete").addEventListener("click", () => {
+        currentVoxel = 0;
+    })
+
+
+    
     canvas.addEventListener('pointerdown', (event) => {
         event.preventDefault();
         recordStartPosition(event);
@@ -340,9 +367,33 @@ window.onload = () => {
     }, {passive: false});
 
     controls.addEventListener('change', requestRenderIfNotRequested);
+
     window.addEventListener('resize', requestRenderIfNotRequested);
 
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+    
+        deletePannel()
+        updateVoxelGeometry(1, 1, 1);
+        
+        var exporter = new OBJExporter();
+        var objCode = exporter.parse(scene);
+    
+        addPannel()
+        updateVoxelGeometry(1, 1, 1);
 
+        console.log(objCode)
+    })
+
+    // =============================================================================
+    // =============================================================================
+    // =============================================================================
+
+
+
+
+
+
+    
 
     loader = new THREE.TextureLoader();
     texture = loader.load('./resources/flourish-cc-by-nc-sa.png', render);
@@ -391,6 +442,20 @@ window.onload = () => {
 }
 
 
+
+
+
+
+// 블록 변경
+function changeBlock() {
+    selectedColor = Number.parseInt(selectedColor)
+    selectedShape = Number.parseInt(selectedShape)
+
+    currentVoxel = selectedColor + (selectedShape - 1) * 5
+    currentVoxel += 1
+}
+
+
 // 판 생성
 function addPannel() {
     for(let i = 0; i < cellSize; i++)
@@ -404,9 +469,6 @@ function deletePannel() {
         for(let j = 0; j < cellSize; j++)
             world.setVoxel(i, 0, j, 0);
 }
-
-
-
 
 
 const mouse = {
@@ -546,18 +608,6 @@ const neighborOffsets = [
 
 
 
-
-function allowUncheck() {
-    if (this.id === currentId) {
-        this.checked = false;
-        currentId = undefined;
-        currentVoxel = 0;
-    } else {
-        currentId = this.id;
-        currentVoxel = parseInt(this.value);
-    }
-}
-
 function getCanvasRelativePosition(event) {
     const rect = canvas.getBoundingClientRect();
     return {
@@ -565,33 +615,6 @@ function getCanvasRelativePosition(event) {
         y: (event.clientY - rect.top ) * canvas.height / rect.height,
     };
 }
-
-
-
-document.getElementById("downloadBtn").addEventListener("click", () => {
-    
-    deletePannel()
-    updateVoxelGeometry(1, 1, 1);  // 0,0,0 will generate
-    
-
-    var exporter = new OBJExporter();
-    var objCode = exporter.parse(scene);
-
-    // https://learngrid.tistory.com/12
-    var text = 'Text to File'
-    var link = document.getElementById("download")
-    link.download = 'test.obj';
-    var blob = new Blob([objCode], {type: 'text/plain'});
-    link.href = window.URL.createObjectURL(blob);
-
-    addPannel()
-    updateVoxelGeometry(1, 1, 1);  // 0,0,0 will generate
-})
-
-
-
-
-
 
 
 

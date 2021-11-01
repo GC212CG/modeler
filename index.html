@@ -15,30 +15,43 @@
     <canvas id="c">
       Your browser doesn't support the HTML5 canvas element
     </canvas>
+
     <div id="ui">
-      <div class="tiles">
-        <input type="radio" name="voxel" id="voxel1" value="1"><label for="voxel1" style="background-position:   -0% -0%"></label>
-        <input type="radio" name="voxel" id="voxel2" value="2"><label for="voxel2" style="background-position: -100% -0%"></label>
-        <input type="radio" name="voxel" id="voxel3" value="3"><label for="voxel3" style="background-position: -200% -0%"></label>
-        <input type="radio" name="voxel" id="voxel4" value="4"><label for="voxel4" style="background-position: -300% -0%"></label>
-        <input type="radio" name="voxel" id="voxel5" value="5"><label for="voxel5" style="background-position: -400% -0%"></label>
-        <input type="radio" name="voxel" id="voxel6" value="6"><label for="voxel6" style="background-position: -500% -0%"></label>
-        <input type="radio" name="voxel" id="voxel7" value="7"><label for="voxel7" style="background-position: -600% -0%"></label>
-        <input type="radio" name="voxel" id="voxel8" value="8"><label for="voxel8" style="background-position: -700% -0%"></label>
-        <button id="downloadBtn">Download</button>
-      </div>
-      <div class="tiles">
-        <input type="radio" name="voxel" id="voxel9"  value="9" ><label for="voxel9"  style="background-position:  -800% -0%"></label>
-        <input type="radio" name="voxel" id="voxel10" value="10"><label for="voxel10" style="background-position:  -900% -0%"></label>
-        <input type="radio" name="voxel" id="voxel11" value="11"><label for="voxel11" style="background-position: -1000% -0%"></label>
-        <input type="radio" name="voxel" id="voxel12" value="12"><label for="voxel12" style="background-position: -1100% -0%"></label>
-        <input type="radio" name="voxel" id="voxel13" value="13"><label for="voxel13" style="background-position: -1200% -0%"></label>
-        <input type="radio" name="voxel" id="voxel14" value="14"><label for="voxel14" style="background-position: -1300% -0%"></label>
-        <input type="radio" name="voxel" id="voxel15" value="15"><label for="voxel15" style="background-position: -1400% -0%"></label>
-        <input type="radio" name="voxel" id="voxel16" value="16"><label for="voxel16" style="background-position: -1500% -0%"></label>
-        <a href="#" id="download">Download</button>
-      </div>
+
+      <button id="blockCreate">생성</button>
+      <button id="blockDelete">삭제</button>
+
+      <select name="colorSelect" id="colorSelect">
+          <option value="1">검정</option>    
+          <option value="2">빨강</option>    
+          <option value="3">파랑</option>
+          <option value="4">초록</option>
+          <option value="5">흰색</option>
+      </select>
+    
+      <select name="shapeSelect" id="shapeSelect">
+          <option value="1">정육면체</option>
+          <option value="2">빗면1</option> 
+          <option value="3">사면체1</option>
+          <option value="4">정사면체</option>
+          <!-- <option value="2">빗면1</option>    
+          <option value="3">빗면2</option>    
+          <option value="4">빗면3</option>    
+          <option value="5">빗면4</option>    
+
+          <option value="6">사면체1</option>
+          <option value="7">사면체1</option>
+          <option value="8">사면체1</option>
+          <option value="9">사면체1</option>
+
+          <option value="10">정사면체</option> -->
+      </select>
+      
+
+      <button id="downloadBtn">Download</button>
+      <a href="#" id="download">Download</button>
     </div>
+
 
     
   </body>
