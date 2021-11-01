@@ -89,7 +89,7 @@ class World {
 
 
 
-    generateGeometryDataForCell(cellX, cellY, cellZ, v) {
+    generateGeometryDataForCell(cellX, cellY, cellZ) {
         const {cellSize, tileSize, tileTextureWidth, tileTextureHeight} = this;
         const positions = [];
         const normals = [];
@@ -449,6 +449,7 @@ function placeVoxel(event) {
 
     const intersection = world.intersectRay(start, end);
     if (intersection) {
+
         const voxelId = event.shiftKey ? 0 : currentVoxel;
         // the intersection point is on the face. That means
         // the math imprecision could put us on either side of the face.
@@ -457,9 +458,15 @@ function placeVoxel(event) {
         const pos = intersection.position.map((v, ndx) => {
             return v + intersection.normal[ndx] * (voxelId > 0 ? 0.5 : -0.5);
         });
-        world.setVoxel(...pos, voxelId);
-        updateVoxelGeometry(...pos);
-        requestRenderIfNotRequested();
+
+
+        // 맨 밑바닥 블록 생성/제거 기능 제한
+        if(pos[1] > 1){
+            world.setVoxel(...pos, voxelId);
+            updateVoxelGeometry(...pos);
+            requestRenderIfNotRequested();
+        }
+        
     }
 }
 
