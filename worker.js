@@ -268,6 +268,7 @@ let loader
 let texture
 
 let world
+let pannel
 let material
 
 
@@ -353,6 +354,7 @@ window.onload = () => {
         tileTextureWidth,
         tileTextureHeight,
     });
+
     
 
     // Add texture to blocks
@@ -377,12 +379,8 @@ window.onload = () => {
     addLight(30, 10, 0, 0.7);
     addLight(0, 10,  30, 0.6);
     
-
-    for(let i = 0; i < cellSize; i++)
-        for(let j = 0; j < cellSize; j++)
-            world.setVoxel(i, 0, j, 1);
-
-
+    // 판 생성
+    addPannel()
 
     updateVoxelGeometry(1, 1, 1);  // 0,0,0 will generate
 
@@ -392,6 +390,20 @@ window.onload = () => {
 
 }
 
+
+// 판 생성
+function addPannel() {
+    for(let i = 0; i < cellSize; i++)
+        for(let j = 0; j < cellSize; j++)
+            world.setVoxel(i, 0, j, 1);
+}
+
+// 판 삭제
+function deletePannel() {
+    for(let i = 0; i < cellSize; i++)
+        for(let j = 0; j < cellSize; j++)
+            world.setVoxel(i, 0, j, 0);
+}
 
 
 
@@ -554,13 +566,14 @@ function getCanvasRelativePosition(event) {
     };
 }
 
-function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min) + min);
-}
 
 
 document.getElementById("downloadBtn").addEventListener("click", () => {
-      
+    
+    deletePannel()
+    updateVoxelGeometry(1, 1, 1);  // 0,0,0 will generate
+    
+
     var exporter = new OBJExporter();
     var objCode = exporter.parse(scene);
 
@@ -569,7 +582,10 @@ document.getElementById("downloadBtn").addEventListener("click", () => {
     var link = document.getElementById("download")
     link.download = 'test.obj';
     var blob = new Blob([objCode], {type: 'text/plain'});
-    link.href = window.URL.createObjectURL(blob);    
+    link.href = window.URL.createObjectURL(blob);
+
+    addPannel()
+    updateVoxelGeometry(1, 1, 1);  // 0,0,0 will generate
 })
 
 
