@@ -1,8 +1,11 @@
 import * as THREE from './resources/three.module.js';
 import {OrbitControls} from './resources/OrbitControls.js';
 
+import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
 
-class VoxelWorld {
+import * as Shape from './objects.js'
+
+class World {
     constructor(options) {
         this.cellSize = options.cellSize;
         this.tileSize = options.tileSize;
@@ -12,6 +15,8 @@ class VoxelWorld {
         this.cellSliceSize = cellSize * cellSize;
         this.cells = {};
     }
+
+
     computeVoxelOffset(x, y, z) {
         const {cellSize, cellSliceSize} = this;
         const voxelX = THREE.MathUtils.euclideanModulo(x, cellSize) | 0;
@@ -21,6 +26,8 @@ class VoxelWorld {
                 voxelZ * cellSize +
                 voxelX;
     }
+
+
     computeCellId(x, y, z) {
         const {cellSize} = this;
         const cellX = Math.floor(x / cellSize);
@@ -35,8 +42,11 @@ class VoxelWorld {
 
 
     // Add block to world
+    // x, y, z, texture
     setVoxel(x, y, z, v, addCell = true) {
-    let cell = this.getCellForVoxel(x, y, z);
+
+        let cell = this.getCellForVoxel(x, y, z);
+
         if (!cell) {
             if (!addCell) {
                 return;
@@ -45,6 +55,7 @@ class VoxelWorld {
         }
         const voxelOffset = this.computeVoxelOffset(x, y, z);
         cell[voxelOffset] = v;
+
     }
 
 
@@ -78,7 +89,7 @@ class VoxelWorld {
 
 
 
-    generateGeometryDataForCell(cellX, cellY, cellZ) {
+    generateGeometryDataForCell(cellX, cellY, cellZ, v) {
         const {cellSize, tileSize, tileTextureWidth, tileTextureHeight} = this;
         const positions = [];
         const normals = [];
@@ -97,28 +108,44 @@ class VoxelWorld {
                     const voxel = this.getVoxel(voxelX, voxelY, voxelZ);
                     if (voxel) {
                         // voxel 0 is sky (empty) so for UVs we start at 0
-                        const uvVoxel = voxel - 1;
-                        // There is a voxel here but do we need faces for it?
-                        for (const {dir, corners, uvRow} of VoxelWorld.faces) {
-                            const neighbor = this.getVoxel(
-                                voxelX + dir[0],
-                                voxelY + dir[1],
-                                voxelZ + dir[2]);
-                            if (!neighbor) {
-                                // this voxel has no neighbor in this direction so we need a face.
-                                const ndx = positions.length / 3;
-                                for (const {pos, uv} of corners) {
-                                    positions.push(pos[0] + x, pos[1] + y, pos[2] + z);
-                                    normals.push(...dir);
-                                    uvs.push(
-                                        (uvVoxel +   uv[0]) * tileSize / tileTextureWidth,
-                                    1 - (uvRow + 1 - uv[1]) * tileSize / tileTextureHeight);
-                                }
-                                indices.push(
-                                    ndx, ndx + 1, ndx + 2,
-                                    ndx + 2, ndx + 1, ndx + 3,
-                                );
+                        let uvVoxel = voxel - 1;
+                        
+                        // 0: bottom block
+                        if(uvVoxel != 0){
+                            uvVoxel = (uvVoxel - 1) % 5 + 1
+                        }
+
+
+                        
+                        
+                        // Shape control
+                        let shape = Shape.facesRect;
+                        
+                        switch(Math.floor((voxel - 2) / 5)){
+                            case 0: shape = Shape.facesRect; break;
+                            case 1: shape = Shape.facesTriangle1; break;
+                            case 2: shape = Shape.facesTri2; break;
+                            case 3: shape = Shape.facesTri3; break;
+                        }
+
+                        for (const {dir, corners, uvRow} of shape) {
+                            
+                            const ndx = positions.length / 3;
+                            for (const {pos, uv} of corners) {
+                                positions.push(pos[0] + x, pos[1] + y, pos[2] + z);
+                                normals.push(...dir);
+                                uvs.push(
+                                    (uvVoxel +   uv[0]) * tileSize / tileTextureWidth,
+                                1 - (uvRow + 1 - uv[1]) * tileSize / tileTextureHeight);
                             }
+                            indices.push(
+                                ndx, ndx + 1, ndx + 2,
+                                ndx + 2, ndx + 1, ndx + 3,
+                            );
+                            
+
+
+
                         }
                     }
                 }
@@ -231,87 +258,6 @@ class VoxelWorld {
 
 
 
-
-
-
-
-VoxelWorld.faces = [
-  { // left
-    uvRow: 0,
-    dir: [ -1,  0,  0, ],
-    corners: [
-      { pos: [ 0, 1, 0 ], uv: [ 0, 1 ], },
-      { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
-      { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
-      { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
-    ],
-  },
-  { // right
-    uvRow: 0,
-    dir: [  1,  0,  0, ],
-    corners: [
-      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
-      { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
-      { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
-    ],
-  },
-  { // bottom
-    uvRow: 1,
-    dir: [  0, -1,  0, ],
-    corners: [
-      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
-      { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 0, 0 ], uv: [ 1, 1 ], },
-      { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
-    ],
-  },
-  { // top
-    uvRow: 2,
-    dir: [  0,  1,  0, ],
-    corners: [
-      { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
-      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
-      { pos: [ 0, 1, 0 ], uv: [ 1, 0 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 0, 0 ], },
-    ],
-  },
-  { // back
-    uvRow: 0,
-    dir: [  0,  0, -1, ],
-    corners: [
-      { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
-      { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
-      { pos: [ 0, 1, 0 ], uv: [ 1, 1 ], },
-    ],
-  },
-  { // front
-    uvRow: 0,
-    dir: [  0,  0,  1, ],
-    corners: [
-      { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
-      { pos: [ 0, 1, 1 ], uv: [ 0, 1 ], },
-      { pos: [ 1, 1, 1 ], uv: [ 1, 1 ], },
-    ],
-  },
-];
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 const cellSize = 64;
 const tileSize = 16;
 const tileTextureWidth = 256;
@@ -345,15 +291,13 @@ const cellIdToMesh = {};
 
 
 
-
 window.onload = () => {
-
 
     // Initialize variables
     canvas = document.querySelector('#c');
     renderer = new THREE.WebGLRenderer({canvas});
 
-    const fov = 75;
+    let fov = 75;
     const aspect = 2;  // the canvas default
     const near = 0.1;
     const far = 1000;
@@ -362,6 +306,8 @@ window.onload = () => {
     
     // Camera Position
     camera.position.set(cellSize*0.45, 4.8 , cellSize*0.45);
+
+    
     
     controls = new OrbitControls(camera, canvas);
     // Camera LookAt
@@ -401,7 +347,7 @@ window.onload = () => {
     texture = loader.load('./resources/flourish-cc-by-nc-sa.png', render);
     
     // Create world
-    world = new VoxelWorld({
+    world = new World({
         cellSize,
         tileSize,
         tileTextureWidth,
@@ -434,7 +380,7 @@ window.onload = () => {
 
     for(let i = 0; i < cellSize; i++)
         for(let j = 0; j < cellSize; j++)
-            world.setVoxel(i, 0, j, 3);
+            world.setVoxel(i, 0, j, 1);
 
 
 
@@ -467,6 +413,11 @@ function recordMovement(event) {
     mouse.moveX += Math.abs(mouse.x - event.clientX);
     mouse.moveY += Math.abs(mouse.y - event.clientY);
 }
+
+
+
+
+
 
 function placeVoxelIfNoMovement(event) {
     if (mouse.moveX < 5 && mouse.moveY < 5) {
@@ -504,7 +455,7 @@ function placeVoxel(event) {
         // so go half a normal into the voxel if removing (currentVoxel = 0)
         // our out of the voxel if adding (currentVoxel  > 0)
         const pos = intersection.position.map((v, ndx) => {
-        return v + intersection.normal[ndx] * (voxelId > 0 ? 0.5 : -0.5);
+            return v + intersection.normal[ndx] * (voxelId > 0 ? 0.5 : -0.5);
         });
         world.setVoxel(...pos, voxelId);
         updateVoxelGeometry(...pos);
@@ -599,6 +550,20 @@ function getCanvasRelativePosition(event) {
 function randInt(min, max) {
     return Math.floor(Math.random() * (max - min) + min);
 }
+
+
+document.getElementById("downloadBtn").addEventListener("click", () => {
+      
+    var exporter = new OBJExporter();
+    var objCode = exporter.parse(scene);
+
+    // https://learngrid.tistory.com/12
+    var text = 'Text to File'
+    var link = document.getElementById("download")
+    link.download = 'test.obj';
+    var blob = new Blob([objCode], {type: 'text/plain'});
+    link.href = window.URL.createObjectURL(blob);    
+})
 
 
 
