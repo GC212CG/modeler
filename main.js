@@ -290,24 +290,36 @@ let camera
 const cellIdToMesh = {};
 
 
-function control_create(){
+var control_create = () => {
     changeBlock()
 }
 
-function control_delete(){
+var control_delete = () => {
     currentVoxel = 0;
 }
 
-function control_selectColor(index){
+var control_selectColor = (index) => {
     selectedColor = index
     changeBlock()
 }
 
-function control_selectShape(index){
+var control_selectShape = (index) => {
     selectedShape = index
     changeBlock()
 }
 
+var control_getObjCode = () => {
+    deletePannel()
+    updateVoxelGeometry(1, 1, 1);
+    
+    var exporter = new OBJExporter();
+    var objCode = exporter.parse(scene);
+
+    addPannel()
+    updateVoxelGeometry(1, 1, 1);
+
+    return objCode
+}
 
 
 window.onload = () => {
@@ -315,6 +327,13 @@ window.onload = () => {
     // Initialize variables
     canvas = document.querySelector('#c');
     renderer = new THREE.WebGLRenderer({canvas});
+
+
+    global_control_create = control_create
+    global_control_delete = control_delete
+    global_control_selectColor = control_selectColor
+    global_control_selectShape = control_selectShape
+    global_control_getObjCode = control_getObjCode
 
     let fov = 75;
     const aspect = 2;  // the canvas default
@@ -360,6 +379,12 @@ window.onload = () => {
         control_selectShape(shapeSelect.options[shapeSelect.options.selectedIndex].value)
     })
 
+    document.getElementById("downloadBtn").addEventListener("click", () => {
+        control_getObjCode()
+    })
+
+
+
 
 
 
@@ -378,22 +403,8 @@ window.onload = () => {
     }, {passive: false});
 
     controls.addEventListener('change', requestRenderIfNotRequested);
-
     window.addEventListener('resize', requestRenderIfNotRequested);
 
-    document.getElementById("downloadBtn").addEventListener("click", () => {
-    
-        deletePannel()
-        updateVoxelGeometry(1, 1, 1);
-        
-        var exporter = new OBJExporter();
-        var objCode = exporter.parse(scene);
-    
-        addPannel()
-        updateVoxelGeometry(1, 1, 1);
-
-        console.log(objCode)
-    })
 
     // =============================================================================
     // =============================================================================
