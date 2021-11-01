@@ -1,8 +1,6 @@
 import * as THREE from './resources/three.module.js';
 import {OrbitControls} from './resources/OrbitControls.js';
-
 import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
-
 import * as Shape from './objects.js'
 
 class World {
@@ -119,13 +117,23 @@ class World {
                         
                         
                         // Shape control
-                        let shape = Shape.facesRect;
+                        let shape = Shape.facesCube;
                         
                         switch(Math.floor((voxel - 2) / 5)){
-                            case 0: shape = Shape.facesRect; break;
-                            case 1: shape = Shape.facesTriangle1; break;
-                            case 2: shape = Shape.facesTri2; break;
-                            case 3: shape = Shape.facesTri3; break;
+                            case 0: shape = Shape.facesCube; break;
+
+                            case 1: shape = Shape.facesHypotenuse1; break;
+                            case 2: shape = Shape.facesHypotenuse2; break;
+                            case 3: shape = Shape.facesHypotenuse3; break;
+                            case 4: shape = Shape.facesHypotenuse4; break;
+
+                            case 5: shape = Shape.facesTriangle1; break;
+                            case 6: shape = Shape.facesTriangle2; break;
+                            case 7: shape = Shape.facesTriangle3; break;
+                            case 8: shape = Shape.facesTriangle4; break;
+
+                            case 9: shape = Shape.facesPyramid; break;
+                            case 10: shape = Shape.facesColumn; break;
                         }
 
                         for (const {dir, corners, uvRow} of shape) {
@@ -142,9 +150,6 @@ class World {
                                 ndx, ndx + 1, ndx + 2,
                                 ndx + 2, ndx + 1, ndx + 3,
                             );
-                            
-
-
 
                         }
                     }
@@ -271,13 +276,9 @@ let world
 let pannel
 let material
 
-
-
-
 let selectedColor = 1;
 let selectedShape = 1;
 let currentVoxel = 1;
-
 
 let canvas
 let renderer
@@ -286,10 +287,26 @@ let controls
 let scene
 let camera
 
-
 const cellIdToMesh = {};
 
 
+function control_create(){
+    changeBlock()
+}
+
+function control_delete(){
+    currentVoxel = 0;
+}
+
+function control_selectColor(index){
+    selectedColor = index
+    changeBlock()
+}
+
+function control_selectShape(index){
+    selectedShape = index
+    changeBlock()
+}
 
 
 
@@ -319,38 +336,32 @@ window.onload = () => {
     scene = new THREE.Scene();
     scene.background = new THREE.Color('lightblue');
 
-
-
-
     changeBlock()
 
-
-
-
     // =============================================================================
     // =============================================================================
     // =============================================================================
 
-    let shapeSelect = document.getElementById("shapeSelect")
-    shapeSelect.addEventListener("change", (event) => {
-        selectedShape = shapeSelect.options[shapeSelect.options.selectedIndex].value
-        changeBlock()
+    document.getElementById("blockCreate").addEventListener("click", () => {
+        control_create()
+    })
+
+    document.getElementById("blockDelete").addEventListener("click", () => {
+        control_delete()
     })
 
     let colorSelect = document.getElementById("colorSelect")
     colorSelect.addEventListener("change", (event) => {
-        selectedColor = colorSelect.options[colorSelect.options.selectedIndex].value
-        changeBlock()
+        control_selectColor(colorSelect.options[colorSelect.options.selectedIndex].value)
+    })
+
+    let shapeSelect = document.getElementById("shapeSelect")
+    shapeSelect.addEventListener("change", (event) => {
+        control_selectShape(shapeSelect.options[shapeSelect.options.selectedIndex].value)
     })
 
 
-    document.getElementById("blockCreate").addEventListener("click", () => {
-        changeBlock()
-    })
 
-    document.getElementById("blockDelete").addEventListener("click", () => {
-        currentVoxel = 0;
-    })
 
 
     
@@ -388,13 +399,6 @@ window.onload = () => {
     // =============================================================================
     // =============================================================================
 
-
-
-
-
-
-    
-
     loader = new THREE.TextureLoader();
     texture = loader.load('./resources/flourish-cc-by-nc-sa.png', render);
     
@@ -406,8 +410,6 @@ window.onload = () => {
         tileTextureHeight,
     });
 
-    
-
     // Add texture to blocks
     material = new THREE.MeshLambertMaterial({
         map: texture,
@@ -415,28 +417,22 @@ window.onload = () => {
         alphaTest: 0.1,
         transparent: true,
     });
-
     
     texture.magFilter = THREE.NearestFilter;
     texture.minFilter = THREE.NearestFilter;
     
-    
-
     // Light
-    
     addLight(0, 10,  -30, 0.9);
     addLight(-30, 10,  0, 0.8);
 
     addLight(30, 10, 0, 0.7);
     addLight(0, 10,  30, 0.6);
     
-    // 판 생성
+    // Create(add) pannel to scene
     addPannel()
-
     updateVoxelGeometry(1, 1, 1);  // 0,0,0 will generate
 
     renderRequested = false;
-    
     render();
 
 }
@@ -444,9 +440,7 @@ window.onload = () => {
 
 
 
-
-
-// 블록 변경
+// Change block by selectecd value (selectedColor, selectedShape)
 function changeBlock() {
     selectedColor = Number.parseInt(selectedColor)
     selectedShape = Number.parseInt(selectedShape)
@@ -456,19 +450,22 @@ function changeBlock() {
 }
 
 
-// 판 생성
+// Create(add) pannel to scene
 function addPannel() {
     for(let i = 0; i < cellSize; i++)
         for(let j = 0; j < cellSize; j++)
             world.setVoxel(i, 0, j, 1);
 }
 
-// 판 삭제
+// Delete(remove) pannel to scene
 function deletePannel() {
     for(let i = 0; i < cellSize; i++)
         for(let j = 0; j < cellSize; j++)
             world.setVoxel(i, 0, j, 0);
 }
+
+
+
 
 
 const mouse = {
@@ -492,20 +489,13 @@ function recordMovement(event) {
 
 
 
-
 function placeVoxelIfNoMovement(event) {
     if (mouse.moveX < 5 && mouse.moveY < 5) {
         placeVoxel(event);
     }
-
     window.removeEventListener('pointermove', recordMovement);
     window.removeEventListener('pointerup', placeVoxelIfNoMovement);
 }
-
-
-
-
-
 
 
 
