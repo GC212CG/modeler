@@ -81,7 +81,7 @@ var facesHypotenuse1 = [
       },
       { // bottom
         uvRow: 1,
-        dir: [  0, -1,  0, ],
+        dir: [ 0, -1, 0, ],
         corners: [
           { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
           { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
@@ -91,7 +91,7 @@ var facesHypotenuse1 = [
       },
       { // top
         uvRow: 2,
-        dir: [  1,  1,  0, ],
+        dir: [ 1, 1, 0, ],
         corners: [
           { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
           { pos: [ 1, 0, 1 ], uv: [ 0, 1 ], },
@@ -129,15 +129,15 @@ var facesHypotenuse2 = [
     uvRow: 0,
     dir: [  1,  0,  0, ],
     corners: [
-      { pos: [ 1, 0, 0 ], uv: [ 0, 1 ], },
       { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
+      { pos: [ 1, 0, 0 ], uv: [ 0, 1 ], },
       { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
       { pos: [ 1, 1, 0 ], uv: [ 1, 0 ], },
     ],
   },
-  { // right
+  { // left
     uvRow: 0,
-    dir: [  1,  0,  0, ],
+    dir: [  -1,  0,  0, ],
     corners: [
       { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
       { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
@@ -159,10 +159,10 @@ var facesHypotenuse2 = [
     uvRow: 2,
     dir: [  0,  1,  1, ],
     corners: [
-      { pos: [ 1, 0, 1 ], uv: [ 1, 1 ], },
       { pos: [ 0, 0, 1 ], uv: [ 0, 1 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 1, 0 ], },
+      { pos: [ 1, 0, 1 ], uv: [ 1, 1 ], },
       { pos: [ 0, 1, 0 ], uv: [ 0, 0 ], },
+      { pos: [ 1, 1, 0 ], uv: [ 1, 0 ], },
     ],
   },
   { // back
@@ -185,10 +185,10 @@ var facesHypotenuse3 = [
     uvRow: 0,
     dir: [  1,  0,  0, ],
     corners: [
-      { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
       { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
+      { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
       { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+      { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
     ],
   },
   { // bottom
@@ -203,20 +203,20 @@ var facesHypotenuse3 = [
   },
   { // top
     uvRow: 2,
-    dir: [  1,  -1,  0, ],
+    dir: [  -1,  1,  0, ],
     corners: [
-      { pos: [ 0, 0, 1 ], uv: [ 1, 1 ], },
       { pos: [ 0, 0, 0 ], uv: [ 1, 1 ], },
-      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+      { pos: [ 0, 0, 1 ], uv: [ 1, 1 ], },
       { pos: [ 1, 1, 0 ], uv: [ 1, 0 ], },
+      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
     ],
   },
   { // back
     uvRow: 0,
     dir: [  0,  0, -1, ],
     corners: [
-      { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
       { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
+      { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
       { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
       { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
     ],
@@ -225,8 +225,8 @@ var facesHypotenuse3 = [
     uvRow: 0,
     dir: [  0,  0,  1, ],
     corners: [
-      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
       { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
+      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
       { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
       { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
     ],
@@ -241,8 +241,8 @@ var facesHypotenuse4 = [
     uvRow: 0,
     dir: [  1,  0,  0, ],
     corners: [
-      { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
       { pos: [ 1, 0, 1 ], uv: [ 0, 0 ], },
+      { pos: [ 1, 0, 0 ], uv: [ 1, 0 ], },
       { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
       { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
     ],
@@ -251,8 +251,8 @@ var facesHypotenuse4 = [
     uvRow: 0,
     dir: [ -1,  0,  0, ],
     corners: [
-      { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
       { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
+      { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
       { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
       { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
     ],
@@ -269,22 +269,22 @@ var facesHypotenuse4 = [
   },
   { // top
     uvRow: 2,
-    dir: [  0,  1,  1, ],
+    dir: [  0,  1,  -1, ],
     corners: [
-      { pos: [ 0, 0, 0 ], uv: [ 1, 1 ], },
       { pos: [ 1, 0, 0 ], uv: [ 0, 1 ], },
-      { pos: [ 0, 1, 1 ], uv: [ 1, 0 ], },
+      { pos: [ 0, 0, 0 ], uv: [ 1, 1 ], },
       { pos: [ 1, 1, 1 ], uv: [ 0, 0 ], },
+      { pos: [ 0, 1, 1 ], uv: [ 1, 0 ], },
     ],
   },
   { // front
     uvRow: 0,
     dir: [  0,  0,  1, ],
     corners: [
-      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
       { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
-      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
+      { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
       { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
+      { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
     ],
   },
 ]
@@ -316,7 +316,7 @@ var facesTriangle1 = [
       },
       { // top
         uvRow: 2,
-        dir: [  0,  1,  1, ],
+        dir: [  1,  1,  0, ],
         corners: [
           { pos: [ 0, 1, 0 ], uv: [ 1, 1 ], },
           { pos: [ 1, 0, 1 ], uv: [ 0, 1 ], },
@@ -336,7 +336,7 @@ var facesTriangle1 = [
       },
       { // front
         uvRow: 0,
-        dir: [  0,  0,  1, ],
+        dir: [  0,  1,  1, ],
         corners: [
           { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
           { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
@@ -352,7 +352,7 @@ var facesTriangle1 = [
 var facesTriangle2 = [
   { // left
     uvRow: 0,
-    dir: [ -1,  0,  0, ],
+    dir: [ -1,  1,  0, ],
     corners: [
       { pos: [ 1, 1, 0 ], uv: [ 0, 1 ], },
       { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
@@ -371,9 +371,9 @@ var facesTriangle2 = [
       { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
     ],
   },
-  { // top
+  { // right
     uvRow: 2,
-    dir: [  0,  1,  1, ],
+    dir: [  1,  0,  0, ],
     corners: [
       { pos: [ 1, 1, 0 ], uv: [ 1, 1 ], },
       { pos: [ 1, 0, 1 ], uv: [ 0, 1 ], },
@@ -393,7 +393,7 @@ var facesTriangle2 = [
   },
   { // front
     uvRow: 0,
-    dir: [  0,  0,  1, ],
+    dir: [  0,  1,  1, ],
     corners: [
       { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
       { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
@@ -409,7 +409,7 @@ var facesTriangle2 = [
 var facesTriangle3 = [
   { // left
     uvRow: 0,
-    dir: [ -1,  0,  0, ],
+    dir: [ -1,  1,  0, ],
     corners: [
       { pos: [ 1, 1, 1 ], uv: [ 0, 1 ], },
       { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
@@ -430,7 +430,7 @@ var facesTriangle3 = [
   },
   { // top
     uvRow: 2,
-    dir: [  0,  1,  1, ],
+    dir: [  1,  0,  0, ],
     corners: [
       { pos: [ 1, 1, 1 ], uv: [ 1, 1 ], },
       { pos: [ 1, 0, 1 ], uv: [ 0, 1 ], },
@@ -440,7 +440,7 @@ var facesTriangle3 = [
   },
   { // back
     uvRow: 0,
-    dir: [  0,  0, -1, ],
+    dir: [  0,  1, -1, ],
     corners: [
       { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
       { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
@@ -466,13 +466,12 @@ var facesTriangle3 = [
 var facesTriangle4 = [
   { // left
     uvRow: 0,
-    dir: [ -1,  0,  0, ],
+    dir: [ -1,  0,  0,],
     corners: [
       { pos: [ 0, 1, 1 ], uv: [ 0, 1 ], },
+      { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
       { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
       { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
-      { pos: [ 0, 0, 1 ], uv: [ 1, 0 ], },
-      
     ],
   },
   { // bottom
@@ -487,7 +486,7 @@ var facesTriangle4 = [
   },
   { // top
     uvRow: 2,
-    dir: [  0,  1,  1, ],
+    dir: [  1,  1,  0, ],
     corners: [
       { pos: [ 0, 1, 1 ], uv: [ 1, 1 ], },
       { pos: [ 1, 0, 1 ], uv: [ 0, 1 ], },
@@ -497,7 +496,7 @@ var facesTriangle4 = [
   },
   { // back
     uvRow: 0,
-    dir: [  0,  0, -1, ],
+    dir: [  0,  1, -1, ],
     corners: [
       { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
       { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
@@ -523,7 +522,7 @@ var facesTriangle4 = [
 var facesPyramid = [
       { // left
         uvRow: 0,
-        dir: [ -1,  0,  0, ],
+        dir: [ -0.33,  0,  0, ],
         corners: [
           { pos: [ 0.5, 1, 0.5 ], uv: [ 0, 1 ], },
           { pos: [ 0, 0, 0 ], uv: [ 0, 0 ], },
@@ -542,9 +541,9 @@ var facesPyramid = [
           { pos: [ 0, 0, 0 ], uv: [ 0, 1 ], },
         ],
       },
-      { // top
+      { // right
         uvRow: 2,
-        dir: [  0,  1,  1, ],
+        dir: [  0.33,  0,  0, ],
         corners: [
           { pos: [ 0.5, 1, 0.5 ], uv: [ 1, 1 ], },
           { pos: [ 1, 0, 1 ], uv: [ 0, 1 ], },
@@ -554,7 +553,7 @@ var facesPyramid = [
       },
       { // back
         uvRow: 0,
-        dir: [  0,  0, -1, ],
+        dir: [  0,  0, -0.33, ],
         corners: [
           { pos: [ 1, 0, 0 ], uv: [ 0, 0 ], },
           { pos: [ 0, 0, 0 ], uv: [ 1, 0 ], },
@@ -564,7 +563,7 @@ var facesPyramid = [
       },
       { // front
         uvRow: 0,
-        dir: [  0,  0,  1, ],
+        dir: [  0,  0,  0.33, ],
         corners: [
           { pos: [ 0, 0, 1 ], uv: [ 0, 0 ], },
           { pos: [ 1, 0, 1 ], uv: [ 1, 0 ], },
@@ -591,7 +590,7 @@ var facesColumn = [
   },
   { 
     uvRow: 0,
-    dir: [  -1, 0, 1, ],
+    dir: [  -1, 0, 0, ],
     corners: [
       { pos: [0, 0, 0.5], uv: [ 0, 1 ], },
       { pos: [0.5, 0, 1], uv: [ 0, 1 ], },
@@ -601,7 +600,7 @@ var facesColumn = [
   },
   { 
     uvRow: 1,
-    dir: [  -1, 0,  -1, ],
+    dir: [  0, 0,  -1, ],
     corners: [
       { pos: [0.5, 0, 0], uv: [ 0, 1 ], },
       { pos: [0, 0, 0.5], uv: [ 0, 1 ], },
@@ -611,7 +610,7 @@ var facesColumn = [
   },
   { 
     uvRow: 2,
-    dir: [  1,  0,  -1, ],
+    dir: [  1,  0,  0, ],
     corners: [
       { pos: [1, 0, 0.5], uv: [ 0, 1 ], },
       { pos: [0.5, 0, 0], uv: [ 0, 1 ], },
@@ -621,7 +620,7 @@ var facesColumn = [
   },
   { 
     uvRow: 0,
-    dir: [  1,  0, 1, ],
+    dir: [  0,  0, 1, ],
     corners: [
       { pos: [0.5, 0, 1], uv: [ 0, 1 ], },
       { pos: [1, 0, 0.5], uv: [ 0, 1 ], },
