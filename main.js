@@ -273,8 +273,9 @@ let loader
 let texture
 
 let world
-let pannel
 let material
+
+let per_view = 1;
 
 let selectedColor = 1;
 let selectedShape = 1;
@@ -290,36 +291,68 @@ let camera
 const cellIdToMesh = {};
 
 
-var control_create = () => {
+let control_create = () => {
     changeBlock()
 }
 
-var control_delete = () => {
+let control_delete = () => {
     currentVoxel = 0;
 }
 
-var control_selectColor = (index) => {
+let control_selectColor = (index) => {
     selectedColor = index
     changeBlock()
 }
 
-var control_selectShape = (index) => {
+let control_selectShape = (index) => {
     selectedShape = index
     changeBlock()
 }
 
-var control_getObjCode = () => {
+let control_getObjCode = () => {
     deletePannel()
     updateVoxelGeometry(1, 1, 1);
     
-    var exporter = new OBJExporter();
-    var objCode = exporter.parse(scene);
+    let exporter = new OBJExporter();
+    let objCode = exporter.parse(scene);
 
     addPannel()
     updateVoxelGeometry(1, 1, 1);
 
     return objCode
 }
+
+// Top View
+let camera_topView = () => {
+    // -0.01 for set camera correctly
+    camera.position.set(cellSize/2, cellSize/2, cellSize/2-0.001);
+    controls.target.set(cellSize/2, 0, cellSize/2);
+    requestRenderIfNotRequested();
+}
+
+// Front View
+let camera_frontView = () => {
+    camera.position.set(cellSize/2, 0, -cellSize/4);
+    controls.target.set(cellSize/2, 0, 0);
+    requestRenderIfNotRequested();
+}
+
+
+// Right Side View
+let camera_rightSideView = () => {
+    camera.position.set(-cellSize/4, 0, cellSize/2);
+    controls.target.set(0, 0, cellSize/2);
+    requestRenderIfNotRequested();
+}
+
+let camera_perspectiveView = () => {
+    // Camera Position
+    camera.position.set(cellSize*0.45, 4.8 , cellSize*0.45);
+    // Camera LookAt
+    controls.target.set(cellSize*0.5, 0, cellSize*0.5);
+    requestRenderIfNotRequested();
+}
+
 
 
 window.onload = () => {
@@ -335,22 +368,21 @@ window.onload = () => {
     global_control_selectShape = control_selectShape
     global_control_getObjCode = control_getObjCode
 
+    global_camera_topView = camera_topView
+    global_camera_frontView = camera_frontView
+    global_camera_rightSideView = camera_rightSideView
+    global_camera_perspectiveView = camera_perspectiveView
+
     let fov = 75;
     const aspect = 2;  // the canvas default
     const near = 0.1;
     const far = 1000;
 
+    // Camera setting
     camera = new THREE.PerspectiveCamera(fov, aspect, near, far);
-    
-    // Camera Position
-    camera.position.set(cellSize*0.45, 4.8 , cellSize*0.45);
-
-    
-    
     controls = new OrbitControls(camera, canvas);
-    // Camera LookAt
-    controls.target.set(cellSize*0.5, 0, cellSize*0.5);
     controls.update();
+    camera_perspectiveView()
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color('lightblue');
@@ -380,18 +412,40 @@ window.onload = () => {
     })
 
     document.getElementById("downloadBtn").addEventListener("click", () => {
-        control_getObjCode()
+        let result = control_getObjCode()
+        console.log(result)
     })
 
+    
 
+    document.getElementById("Button0").onclick = function(){
+        camera_frontView()
+    };
 
+    document.getElementById("Button1").onclick = function(){
+        camera_rightSideView()
+    };
 
-
+    document.getElementById("Button2").onclick = function(){
+        camera_topView()
+    };
+    
+    document.getElementById("Button3").onclick = function(){
+        camera_perspectiveView()
+    };
 
 
     
     canvas.addEventListener('pointerdown', (event) => {
         event.preventDefault();
+
+        // Left click to create
+        if(event.which == 1)
+            control_create()
+        // Right click to delete
+        else
+            control_delete()
+        
         recordStartPosition(event);
         window.addEventListener('pointermove', recordMovement);
         window.addEventListener('pointerup', placeVoxelIfNoMovement);
@@ -656,6 +710,10 @@ function render() {
     }
 
     controls.update();
+    
+    if(camera.position.y<=1.1)
+        camera.position.y = 1.1;
+    
     renderer.render(scene, camera);
 }
 
