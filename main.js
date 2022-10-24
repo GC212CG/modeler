@@ -1,7 +1,8 @@
-import * as THREE from './resources/three.module.js';
-import {OrbitControls} from './resources/OrbitControls.js';
+import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/build/three.module.js'
+import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/controls/OrbitControls.js';
 import {OBJExporter} from 'https://threejsfundamentals.org/threejs/resources/threejs/r132/examples/jsm/exporters/OBJExporter.js';
-import * as Shape from './objects.js'
+import * as Shape from './resources/objects.js'
+let textureSrc = './resources/texture.png'
 
 class World {
     constructor(options) {
@@ -291,11 +292,16 @@ let camera
 const cellIdToMesh = {};
 
 
+let deleteMode = false;
+
+
 let control_create = () => {
+    deleteMode = false;
     changeBlock()
 }
 
 let control_delete = () => {
+    deleteMode = true;
     currentVoxel = 0;
 }
 
@@ -361,17 +367,18 @@ window.onload = () => {
     canvas = document.querySelector('#c');
     renderer = new THREE.WebGLRenderer({canvas});
 
+    
+    globalThis.global_control_create = control_create
+    globalThis.global_control_delete = control_delete
+    globalThis.global_control_selectColor = control_selectColor
+    globalThis.global_control_selectShape = control_selectShape
+    globalThis.global_control_getObjCode = control_getObjCode
 
-    global_control_create = control_create
-    global_control_delete = control_delete
-    global_control_selectColor = control_selectColor
-    global_control_selectShape = control_selectShape
-    global_control_getObjCode = control_getObjCode
-
-    global_camera_topView = camera_topView
-    global_camera_frontView = camera_frontView
-    global_camera_rightSideView = camera_rightSideView
-    global_camera_perspectiveView = camera_perspectiveView
+    globalThis.global_camera_topView = camera_topView
+    globalThis.global_camera_frontView = camera_frontView
+    globalThis.global_camera_rightSideView = camera_rightSideView
+    globalThis.global_camera_perspectiveView = camera_perspectiveView
+    
 
     let fov = 75;
     const aspect = 2;  // the canvas default
@@ -385,9 +392,10 @@ window.onload = () => {
     camera_perspectiveView()
 
     scene = new THREE.Scene();
-    scene.background = new THREE.Color('lightblue');
+    scene.background = new THREE.Color( 0xF3FBFF );
 
     changeBlock()
+
 
     // =============================================================================
     // =============================================================================
@@ -434,17 +442,22 @@ window.onload = () => {
         camera_perspectiveView()
     };
 
-
     
+
     canvas.addEventListener('pointerdown', (event) => {
         event.preventDefault();
 
+
+        // Right click / delete mode to delete
+        if (event.which == 3 || deleteMode)
+            currentVoxel = 0;
         // Left click to create
-        if(event.which == 1)
-            control_create()
-        // Right click to delete
-        else
-            control_delete()
+        else if(event.which == 1)
+            changeBlock()
+
+            
+            
+        
         
         recordStartPosition(event);
         window.addEventListener('pointermove', recordMovement);
@@ -465,7 +478,8 @@ window.onload = () => {
     // =============================================================================
 
     loader = new THREE.TextureLoader();
-    texture = loader.load('./resources/flourish-cc-by-nc-sa.png', render);
+    texture = loader.load(textureSrc, render);
+    
     
     // Create world
     world = new World({
@@ -741,9 +755,5 @@ function requestRenderIfNotRequested() {
         requestAnimationFrame(render);
     }
 }
-
-
-
-
 
 
